@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — Olive Designs</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-visual">
+    <div class="auth-visual-content">
+      <span class="brand-large">Olive Designs</span>
+      <p>A curated marketplace where beautiful rooms come to life — designed by real people, for real homes.</p>
+    </div>
+  </div>
+  <div class="auth-form-side">
+    <h1>Create your account</h1>
+    <p class="subtitle">Already have an account? <a href="/login">Sign in</a></p>
+    <div class="alert alert-error" id="errorAlert"></div>
+    <form id="signupForm" novalidate>
+      <div class="form-group">
+        <label>I want to</label>
+        <div class="role-selector">
+          <div class="role-option">
+            <input type="radio" name="role" id="role-customer" value="customer" checked>
+            <label for="role-customer">
+              <span class="role-icon">🛋️</span>
+              <span class="role-name">Get Designs</span>
+              <span class="role-desc">I want my room designed by a professional</span>
+            </label>
+          </div>
+          <div class="role-option">
+            <input type="radio" name="role" id="role-designer" value="designer">
+            <label for="role-designer">
+              <span class="role-icon">🎨</span>
+              <span class="role-name">Design Rooms</span>
+              <span class="role-desc">I'm a designer and want to take on clients</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="form-group" id="designerCodeGroup" style="display:none;">
+        <label for="designer_code">Designer Access Code</label>
+        <input type="password" id="designer_code" name="designer_code" placeholder="Enter your access code">
+      </div>
+      <div class="form-group">
+        <label for="full_name">Full Name</label>
+        <input type="text" id="full_name" name="full_name" placeholder="Your full name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="At least 6 characters" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;" id="submitBtn">Create Account</button>
+    </form>
+  </div>
+</div>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('role') === 'designer') {
+    document.getElementById('role-designer').checked = true;
+    document.getElementById('designerCodeGroup').style.display = 'block';
+  }
+
+  document.querySelectorAll('input[name="role"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const codeGroup = document.getElementById('designerCodeGroup');
+      codeGroup.style.display = this.value === 'designer' ? 'block' : 'none';
+    });
+  });
+
+  document.getElementById('signupForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const errorAlert = document.getElementById('errorAlert');
+    errorAlert.classList.remove('show');
+
+    const full_name = document.getElementById('full_name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const role = document.querySelector('input[name="role"]:checked').value;
+    const designer_code = document.getElementById('designer_code').value;
+
+    if (!full_name || !email || !password) {
+      errorAlert.textContent = 'Please fill in all fields.';
+      errorAlert.classList.add('show');
+      return;
+    }
+
+    if (role === 'designer' && designer_code !== 'OLIVE2024') {
+      errorAlert.textContent = 'Invalid designer access code.';
+      errorAlert.classList.add('show');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Creating account…';
+
+    try {
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ full_name, email, password, role })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        errorAlert.textContent = data.error || 'Something went wrong.';
+        errorAlert.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+        return;
+      }
+      window.location.href = data.role === 'designer' ? '/dashboard/designer' : '/dashboard/customer';
+    } catch (err) {
+      errorAlert.textContent = 'Network error. Please try again.';
+      errorAlert.classList.add('show');
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+    }
+  });
+</script>
+</body>
+</html>

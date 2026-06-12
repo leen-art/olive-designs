@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Project — Olive Designs</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .steps-indicator { display: flex; align-items: center; gap: 8px; margin-bottom: 40px; }
+    .step-dot { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; color: var(--muted); background: var(--white); transition: all 0.2s; }
+    .step-dot.active { border-color: var(--olive); background: var(--olive); color: white; }
+    .step-dot.done { border-color: var(--olive); background: var(--olive); color: white; }
+    .step-line { flex: 1; height: 2px; background: var(--border); transition: background 0.2s; }
+    .step-line.done { background: var(--olive); }
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+    .step-title { font-size: 1.4rem; margin-bottom: 6px; }
+    .step-subtitle { color: var(--muted); font-size: 0.9rem; margin-bottom: 28px; font-weight: 300; }
+    .upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--white); }
+    .upload-area:hover { border-color: var(--olive); background: rgba(107,124,74,0.03); }
+    .upload-area .upload-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .upload-area p { color: var(--muted); font-size: 0.9rem; font-weight: 300; }
+    .upload-area strong { color: var(--olive); }
+    .image-previews { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; margin-top: 16px; }
+    .image-preview { position: relative; aspect-ratio: 1; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .image-preview .remove-img { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; border-radius: 50%; background: rgba(0,0,0,0.6); color: white; border: none; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
+    .budget-input-wrap { position: relative; }
+    .budget-input-wrap span { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 0.95rem; }
+    .budget-input-wrap input { padding-left: 28px; }
+    .nav-buttons { display: flex; justify-content: space-between; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    .checkbox-option input { display: none; }
+    .checkbox-option label { display: block; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.85rem; text-align: center; color: var(--text); background: var(--white); transition: all 0.2s; text-transform: none; letter-spacing: 0; font-weight: 400; }
+    .checkbox-option input:checked + label { border-color: var(--olive); background: rgba(107,124,74,0.08); color: var(--olive); font-weight: 500; }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="brand-wrap">
+      <a href="/" class="brand" style="font-size:1.3rem;text-decoration:none;">Olive Designs</a>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="/dashboard/customer">My Projects</a></li>
+      <li><a href="/project/new" class="active">New Project</a></li>
+      <li><a href="/designers">Browse Designers</a></li>
+      <li><a href="/notifications">Notifications</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <ul class="sidebar-nav" style="padding:0;">
+        <li><a href="#"><span id="nameDisplay">Account</span></a></li>
+        <li><a href="#" onclick="logout(event)">Sign Out</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="dashboard-main">
+    <div class="page-header">
+      <h1>New Project</h1>
+      <p>Tell us about your space and vision</p>
+    </div>
+
+    <div style="max-width:680px;">
+      <div class="steps-indicator">
+        <div class="step-dot active" id="dot-1">1</div>
+        <div class="step-line" id="line-1"></div>
+        <div class="step-dot" id="dot-2">2</div>
+        <div class="step-line" id="line-2"></div>
+        <div class="step-dot" id="dot-3">3</div>
+        <div class="step-line" id="line-3"></div>
+        <div class="step-dot" id="dot-4">4</div>
+      </div>
+
+      <div class="alert alert-error" id="errorAlert"></div>
+
+      <form id="projectForm" enctype="multipart/form-data">
+
+        <div class="form-step active" id="step-1">
+          <h2 class="step-title">About your room</h2>
+          <p class="step-subtitle">Let's start with the basics</p>
+          <div class="form-group">
+            <label>Room Type</label>
+            <select name="room_type" id="room_type" required>
+              <option value="">Select room type...</option>
+              <option>Living Room</option>
+              <option>Bedroom</option>
+              <option>Dining Room</option>
+              <option>Home Office</option>
+              <option>Kitchen</option>
+              <option>Bathroom</option>
+              <option>Kids Room</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Room Dimensions</label>
+            <input type="text" name="dimensions" id="dimensions" placeholder="e.g. 12ft x 15ft or 4m x 5m">
+          </div>
+          <div class="form-group">
+            <label>Budget</label>
+            <div class="budget-input-wrap">
+              <span>$</span>
+              <input type="number" name="budget" id="budget" placeholder="e.g. 3000" min="0">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>What feeling do you want this room to give?</label>
+            <textarea name="feeling" id="feeling" rows="3" placeholder="e.g. Cozy and warm, like a luxury hotel suite..."></textarea>
+          </div>
+          <div class="nav-buttons">
+            <div></div>
+            <button type="button" class="btn btn-olive" onclick="nextStep(1)">Next →</button>
+          </div>
+        </div>
+
+        <div class="form-step" id="step-2">
+          <h2 class="step-title">Your style</h2>
+          <p class="step-subtitle">Help your designer understand your aesthetic</p>
+          <div class="form-group">
+            <label>Style Preferences</label>
+            <div class="checkbox-grid">
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Modern" value="Modern"><label for="style-Modern">Modern</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Minimalist" value="Minimalist"><label for="style-Minimalist">Minimalist</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Scandinavian" value="Scandinavian"><label for="style-Scandinavian">Scandinavian</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Bohemian" value="Bohemian"><label for="style-Bohemian">Bohemian</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Traditional" value="Traditional"><label for="style-Traditional">Traditional</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Contemporary" value="Contemporary"><label for="style-Contemporary">Contemporary</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Industrial" value="Industrial"><label for="style-Industrial">Industrial</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Mid-Century" value="Mid-Century"><label for="style-Mid-Century">Mid-Century</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Coastal" value="Coastal"><label for="style-Coastal">Coastal</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Maximalist" value="Maximalist"><label for="style-Maximalist">Maximalist</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Art-Deco" value="Art Deco"><label for="style-Art-Deco">Art Deco</label></div>
+              <div class="checkbox-option"><input type="checkbox" name="style_preferences" id="style-Rustic" value="Rustic"><label for="style-Rustic">Rustic</label></div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Color Preferences</label>
+            <input type="text" name="color_preferences" id="color_preferences" placeholder="e.g. Warm neutrals, dusty rose, olive green...">
+          </div>
+          <div class="form-group">
+            <label>Items you want to keep</label>
+            <textarea name="items_to_keep" id="items_to_keep" rows="2" placeholder="e.g. My grandmother's armchair, the wooden coffee table..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Items you want</label>
+            <textarea name="items_wanted" id="items_wanted" rows="2" placeholder="e.g. A new sofa, floor lamp, bookshelf..."></textarea>
+          </div>
+          <div class="nav-buttons">
+            <button type="button" class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+            <button type="button" class="btn btn-olive" onclick="nextStep(2)">Next →</button>
+          </div>
+        </div>
+
+        <div class="form-step" id="step-3">
+          <h2 class="step-title">Photos of your space</h2>
+          <p class="step-subtitle">Upload at least 3 photos from different angles</p>
+          <div class="form-group">
+            <label>Room Photos (minimum 3)</label>
+            <div class="upload-area" onclick="document.getElementById('roomPhotos').click()">
+              <div class="upload-icon">📷</div>
+              <p><strong>Click to upload</strong> or drag and drop</p>
+              <p>JPG, PNG up to 10MB each</p>
+            </div>
+            <input type="file" id="roomPhotos" name="room_photos" multiple accept="image/*" style="display:none">
+            <div class="image-previews" id="roomPreviews"></div>
+          </div>
+          <div class="form-group">
+            <label>Inspiration Images (optional)</label>
+            <div class="upload-area" onclick="document.getElementById('inspirationPhotos').click()">
+              <div class="upload-icon">✨</div>
+              <p><strong>Click to upload</strong> inspiration images</p>
+              <p>Rooms you love, Pinterest screenshots, etc.</p>
+            </div>
+            <input type="file" id="inspirationPhotos" name="inspiration_photos" multiple accept="image/*" style="display:none">
+            <div class="image-previews" id="inspirationPreviews"></div>
+          </div>
+          <div class="nav-buttons">
+            <button type="button" class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+            <button type="button" class="btn btn-olive" onclick="nextStep(3)">Next →</button>
+          </div>
+        </div>
+
+        <div class="form-step" id="step-4">
+          <h2 class="step-title">Review & Submit</h2>
+          <p class="step-subtitle">Almost there — review your project details</p>
+          <div id="reviewSummary" style="background:var(--white);border-radius:12px;border:1px solid var(--border);padding:24px;margin-bottom:24px;"></div>
+          <div style="background:var(--cream);border-radius:12px;padding:20px;margin-bottom:24px;border:1px solid var(--border);">
+            <div style="font-size:1.1rem;font-weight:600;margin-bottom:4px;">$199 <span style="font-size:0.85rem;font-weight:400;color:var(--muted);">one-time payment</span></div>
+            <div style="font-size:0.85rem;color:var(--muted);">Includes expert design, full furniture list, concept image, and one revision.</div>
+          </div>
+          <div class="nav-buttons">
+            <button type="button" class="btn btn-secondary" onclick="prevStep(4)">← Back</button>
+            <button type="button" class="btn btn-primary" id="submitBtn" onclick="submitProject()">Continue to Payment →</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </main>
+</div>
+
+<script>
+  let currentStep = 1;
+  const totalSteps = 4;
+  const roomFiles = [];
+  const inspirationFiles = [];
+
+  async function logout(e) {
+    e.preventDefault();
+    await fetch('/logout', { method: 'POST' });
+    window.location.href = '/';
+  }
+
+  fetch('/api/me').then(r => r.json()).then(data => {
+    if (!data.loggedIn) return window.location.href = '/login';
+    document.getElementById('nameDisplay').textContent = data.fullName.split(' ')[0];
+  });
+
+  function showError(msg) {
+    const el = document.getElementById('errorAlert');
+    el.textContent = msg;
+    el.classList.add('show');
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function hideError() {
+    document.getElementById('errorAlert').classList.remove('show');
+  }
+
+  function nextStep(from) {
+    hideError();
+    if (from === 1 && !document.getElementById('room_type').value) {
+      return showError('Please select a room type.');
+    }
+    if (from === 3 && roomFiles.length < 3) {
+      return showError('Please upload at least 3 photos of your room.');
+    }
+    goToStep(from + 1);
+  }
+
+  function prevStep(from) {
+    hideError();
+    goToStep(from - 1);
+  }
+
+  function goToStep(step) {
+    document.getElementById('step-' + currentStep).classList.remove('active');
+    document.getElementById('dot-' + currentStep).classList.remove('active');
+    document.getElementById('dot-' + currentStep).classList.add('done');
+    if (step < currentStep) {
+      document.getElementById('dot-' + currentStep).classList.remove('done');
+    }
+    currentStep = step;
+    document.getElementById('step-' + currentStep).classList.add('active');
+    document.getElementById('dot-' + currentStep).classList.add('active');
+    document.getElementById('dot-' + currentStep).classList.remove('done');
+    for (let i = 1; i < totalSteps; i++) {
+      const line = document.getElementById('line-' + i);
+      if (i < currentStep) line.classList.add('done');
+      else line.classList.remove('done');
+    }
+    if (currentStep === 4) buildReview();
+    window.scrollTo(0, 0);
+  }
+
+  function buildReview() {
+    const roomType = document.getElementById('room_type').value;
+    const dimensions = document.getElementById('dimensions').value;
+    const budget = document.getElementById('budget').value;
+    const feeling = document.getElementById('feeling').value;
+    const colorPrefs = document.getElementById('color_preferences').value;
+    const styles = [...document.querySelectorAll('input[name="style_preferences"]:checked')].map(x => x.value).join(', ');
+    document.getElementById('reviewSummary').innerHTML = `
+      <div style="display:grid;gap:12px;">
+        <div style="display:flex;gap:12px;"><span style="color:var(--muted);min-width:140px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Room Type</span><span>${roomType || '—'}</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--muted);min-width:140px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Dimensions</span><span>${dimensions || '—'}</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--muted);min-width:140px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Budget</span><span>${budget ? '$' + budget : '—'}</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--muted);min-width:140px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Styles</span><span>${styles || '—'}</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--muted);min-width:140px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Colors</span><span>${colorPrefs || '—'}</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--muted);min-width:140px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Feeling</span><span>${feeling || '—'}</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--muted);min-width:140px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Room Photos</span><span>${roomFiles.length} uploaded</span></div>
+        <div style="display:flex;gap:12px;"><span style="color:var(--muted);min-width:140px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.06em;">Inspiration</span><span>${inspirationFiles.length} uploaded</span></div>
+      </div>
+    `;
+  }
+
+  async function submitProject() {
+    hideError();
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Saving project…';
+
+    const formData = new FormData();
+    formData.append('room_type', document.getElementById('room_type').value);
+    formData.append('dimensions', document.getElementById('dimensions').value);
+    formData.append('budget', document.getElementById('budget').value);
+    formData.append('feeling', document.getElementById('feeling').value);
+    formData.append('color_preferences', document.getElementById('color_preferences').value);
+    formData.append('items_to_keep', document.getElementById('items_to_keep').value);
+    formData.append('items_wanted', document.getElementById('items_wanted').value);
+
+    const styles = [...document.querySelectorAll('input[name="style_preferences"]:checked')].map(x => x.value).join(', ');
+    formData.append('style_preferences', styles);
+
+    roomFiles.forEach(f => formData.append('room_photos', f));
+    inspirationFiles.forEach(f => formData.append('inspiration_photos', f));
+
+    try {
+      const res = await fetch('/api/projects', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (!res.ok) {
+        showError(data.error || 'Something went wrong.');
+        btn.disabled = false;
+        btn.textContent = 'Continue to Payment →';
+        return;
+      }
+      window.location.href = '/checkout/' + data.projectId;
+    } catch (err) {
+      showError('Network error. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'Continue to Payment →';
+    }
+  }
+
+  function setupUpload(inputId, previewId, fileArray) {
+    const input = document.getElementById(inputId);
+    const preview = document.getElementById(previewId);
+    input.addEventListener('change', function() {
+      [...this.files].forEach(file => {
+        fileArray.push(file);
+        const reader = new FileReader();
+        reader.onload = e => {
+          const div = document.createElement('div');
+          div.className = 'image-preview';
+          const type = fileArray === roomFiles ? 'room' : 'inspo';
+          div.innerHTML = `<img src="${e.target.result}"><button class="remove-img" onclick="removeImg(this, '${file.name}', '${type}')">✕</button>`;
+          preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+      this.value = '';
+    });
+  }
+
+  function removeImg(btn, name, type) {
+    const arr = type === 'room' ? roomFiles : inspirationFiles;
+    const idx = arr.findIndex(f => f.name === name);
+    if (idx > -1) arr.splice(idx, 1);
+    btn.parentElement.remove();
+  }
+
+  setupUpload('roomPhotos', 'roomPreviews', roomFiles);
+  setupUpload('inspirationPhotos', 'inspirationPreviews', inspirationFiles);
+</script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olive Designs — Luxury Interior Design Marketplace</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .hero { min-height: 92vh; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+    .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 80px 80px 80px 100px; }
+    .hero-eyebrow { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--olive); margin-bottom: 20px; display: block; }
+    .hero-text h1 { font-size: 3.4rem; line-height: 1.15; color: var(--text); margin-bottom: 24px; }
+    .hero-text h1 em { color: var(--olive); }
+    .hero-text p { font-size: 1.05rem; color: var(--muted); font-weight: 300; max-width: 400px; line-height: 1.8; margin-bottom: 40px; }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .hero-image { position: relative; overflow: hidden; }
+    .hero-image-overlay { position: absolute; inset: 0; background: linear-gradient(to right, var(--cream) 0%, transparent 30%); }
+    .section { padding: 100px 0; }
+    .section-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--rose); display: block; margin-bottom: 12px; text-align: center; }
+    .section-title { font-size: 2.2rem; text-align: center; margin-bottom: 60px; color: var(--text); }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .step { text-align: center; }
+    .step-number { width: 52px; height: 52px; border-radius: 50%; background: var(--pink); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--text); font-style: italic; }
+    .step h3 { font-size: 1.1rem; margin-bottom: 12px; }
+    .step p { font-size: 0.9rem; color: var(--muted); font-weight: 300; line-height: 1.7; }
+    .section-alt { background: var(--white); }
+    .designer-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .designer-card { background: var(--cream); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); transition: all 0.2s; }
+    .designer-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px var(--shadow-md); }
+    .designer-card-img { height: 220px; display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+    .designer-card-body { padding: 20px; }
+    .designer-card-body h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .designer-card-body .specialty { font-size: 0.82rem; color: var(--rose); font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; }
+    .stars { color: #c9a84c; font-size: 0.85rem; letter-spacing: 2px; }
+    .cta-banner { background: linear-gradient(135deg, var(--olive-dark) 0%, var(--olive) 100%); padding: 80px 0; text-align: center; }
+    .cta-banner h2 { font-size: 2.4rem; color: white; margin-bottom: 16px; }
+    .cta-banner p { font-size: 1rem; color: rgba(255,255,255,0.75); max-width: 440px; margin: 0 auto 36px; font-weight: 300; line-height: 1.7; }
+    footer { background: var(--text); color: rgba(255,255,255,0.5); padding: 40px 0; text-align: center; }
+    footer .brand { color: rgba(255,255,255,0.85); font-size: 1.4rem; display: block; margin-bottom: 12px; }
+    footer p { font-size: 0.85rem; font-weight: 300; }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-image { display: none; }
+      .hero-text { padding: 60px 32px; }
+      .hero-text h1 { font-size: 2.2rem; }
+      .steps-grid, .designer-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="brand" style="font-size:1.5rem;text-decoration:none;">Olive Designs</a>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#designers">Designers</a></li>
+        <li><a href="/login">Sign in</a></li>
+        <li><a href="/signup" class="btn btn-primary" style="padding:9px 22px;font-size:0.8rem;">Get Started</a></li>
+      </ul>
+    </div>
+  </nav>
+  <section class="hero">
+    <div class="hero-text">
+      <span class="hero-eyebrow">Luxury Interior Design, Reimagined</span>
+      <h1>Your dream room,<br>designed by <em>real designers.</em></h1>
+      <p>Upload photos of your space, share your vision, and receive a fully shoppable design — curated by an expert designer, just for you.</p>
+      <div class="hero-ctas">
+        <a href="/signup?role=customer" class="btn btn-primary">Get Started as Customer</a>
+        <a href="/signup?role=designer" class="btn btn-secondary">Join as Designer</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div style="width:100%;height:100%;background:linear-gradient(145deg,#c8d4ac 0%,#8a9e5f 40%,#4f5c35 100%);display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;color:rgba(255,255,255,0.6);">
+          <div style="font-size:5rem;margin-bottom:12px;">🛋️</div>
+          <div style="font-family:'Jost',sans-serif;font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;">Aspirational interiors</div>
+        </div>
+      </div>
+      <div class="hero-image-overlay"></div>
+    </div>
+  </section>
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <span class="section-label">Simple Process</span>
+      <h2 class="section-title">Your room transformed, in three steps</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Share Your Space</h3>
+          <p>Upload photos of your room from multiple angles, share your measurements, style preferences, and budget.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Designer Gets to Work</h3>
+          <p>A curated designer claims your project and builds a complete shoppable furniture concept tailored to you.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Shop Your New Room</h3>
+          <p>Review your finished design with every item linked directly to the store. One click to buy each piece.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section section-alt" id="designers">
+    <div class="container">
+      <span class="section-label">Our Designers</span>
+      <h2 class="section-title">Meet the talent</h2>
+      <div class="designer-cards">
+        <div class="designer-card">
+          <div class="designer-card-img" style="background:linear-gradient(135deg,#c8d4ac,#8a9e5f);">🎨</div>
+          <div class="designer-card-body">
+            <h3>Camille Renard</h3>
+            <div class="specialty">Modern Minimalist · Scandinavian</div>
+            <div class="stars">★★★★★</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:6px;">47 projects completed</div>
+          </div>
+        </div>
+        <div class="designer-card">
+          <div class="designer-card-img" style="background:linear-gradient(135deg,#C4857E,#e8a89d);">🖼️</div>
+          <div class="designer-card-body">
+            <h3>Sofia Marchetti</h3>
+            <div class="specialty">Mediterranean · Warm Contemporary</div>
+            <div class="stars">★★★★★</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:6px;">38 projects completed</div>
+          </div>
+        </div>
+        <div class="designer-card">
+          <div class="designer-card-img" style="background:linear-gradient(135deg,#8a7e74,#c4b9ae);">🌿</div>
+          <div class="designer-card-body">
+            <h3>James Adler</h3>
+            <div class="specialty">Organic Modern · Biophilic</div>
+            <div class="stars">★★★★☆</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-top:6px;">29 projects completed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="cta-banner">
+    <div class="container">
+      <h2>Ready to transform your space?</h2>
+      <p>Join hundreds of customers who've turned their rooms into something extraordinary.</p>
+      <a href="/signup" class="btn btn-primary">Start Your Project — Free</a>
+    </div>
+  </section>
+  <footer>
+    <div class="container">
+      <span class="brand">Olive Designs</span>
+      <p>© 2024 Olive Designs. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Projects — Olive Designs</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .project-card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; cursor: pointer; }
+    .project-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--shadow-md); }
+    .project-card-img { height: 160px; background: linear-gradient(135deg, #c8d4ac, #8a9e5f); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden; }
+    .project-card-img img { width: 100%; height: 100%; object-fit: cover; }
+    .project-card-body { padding: 20px; }
+    .project-card-body h3 { font-size: 1rem; margin-bottom: 6px; }
+    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
+    .status-submitted { background: #f0f4eb; color: #4f5c35; }
+    .status-assigned { background: #fdf6e3; color: #8a6914; }
+    .status-in_progress { background: #e8f0fe; color: #1a56a0; }
+    .status-review { background: #fdf0ef; color: #9c3a34; }
+    .status-completed { background: #f0f4eb; color: #4f5c35; }
+  </style>
+</head>
+<body>
+<div class="dashboard-layout">
+  <aside class="sidebar">
+    <div class="brand-wrap">
+      <a href="/" class="brand" style="font-size:1.3rem;text-decoration:none;">Olive Designs</a>
+    </div>
+    <ul class="sidebar-nav">
+      <li><a href="/dashboard/customer" class="active">My Projects</a></li>
+      <li><a href="/project/new">New Project</a></li>
+      <li><a href="/designers">Browse Designers</a></li>
+      <li><a href="/notifications">Notifications</a></li>
+    </ul>
+    <div class="sidebar-bottom">
+      <ul class="sidebar-nav" style="padding:0;">
+        <li><a href="#"><span id="nameDisplay">Account</span></a></li>
+        <li><a href="#" onclick="logout(event)">Sign Out</a></li>
+      </ul>
+    </div>
+  </aside>
+  <main class="dashboard-main">
+    <div class="page-header">
+      <h1>My Projects</h1>
+      <p>Track your active designs and past projects</p>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <div></div>
+      <a href="/project/new" class="btn btn-primary">+ New Project</a>
+    </div>
+    <div id="projectsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;">
+      <div style="grid-column:1/-1;text-align:center;padding:80px 40px;">
+        <div style="font-size:2rem;">⏳</div>
+        <p style="color:var(--muted);margin-top:12px;">Loading projects...</p>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  async function logout(e) {
+    e.preventDefault();
+    await fetch('/logout', { method: 'POST' });
+    window.location.href = '/';
+  }
+
+  fetch('/api/me').then(r => r.json()).then(data => {
+    if (!data.loggedIn) return window.location.href = '/login';
+    document.getElementById('nameDisplay').textContent = data.fullName.split(' ')[0];
+  });
+
+  async function loadProjects() {
+    const res = await fetch('/api/projects');
+    const projects = await res.json();
+    const grid = document.getElementById('projectsGrid');
+    if (!projects.length) {
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:80px 40px;">
+          <div style="font-size:3rem;margin-bottom:16px;">🛋️</div>
+          <h3 style="font-size:1.2rem;margin-bottom:8px;">No projects yet</h3>
+          <p style="color:var(--muted);font-weight:300;margin-bottom:24px;">Start your first project and transform your space.</p>
+          <a href="/project/new" class="btn btn-primary">Start a Project</a>
+        </div>`;
+      return;
+    }
+    grid.innerHTML = projects.map(p => `
+      <div class="project-card" onclick="window.location.href='/project/${p.id}'">
+        <div class="project-card-img">
+          ${p.preview_image ? `<img src="${p.preview_image}">` : '<div style="width:100%;height:100%;background:linear-gradient(135deg,#c8d4ac,#8a9e5f);"></div>'}
+        </div>
+        <div class="project-card-body">
+          <h3>${p.room_type}</h3>
+          <div style="margin-bottom:8px;">
+            <span class="status-badge status-${p.status}">${p.status.replace('_', ' ')}</span>
+          </div>
+          <div style="font-size:0.82rem;color:var(--muted);">
+            ${p.designer_name ? p.designer_name : 'Awaiting designer'}
+            ${p.budget ? ' · $' + p.budget : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  loadProjects();
+</script>
+</body>
+</html>
