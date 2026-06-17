@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Flip Preview — Olive Designs</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', serif; background: #FAF8F5; color: #2C2C2C; }
+
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 2.5rem; background: #fff; border-bottom: 1px solid #E8E2D9;
+    }
+    .logo { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.04em; color: #2C2C2C; text-decoration: none; }
+    .logo span { color: #8B6F47; }
+    nav a { color: #2C2C2C; text-decoration: none; font-size: 0.9rem; font-family: sans-serif; }
+
+    .hero {
+      text-align: center; padding: 4rem 2rem 2rem;
+      background: linear-gradient(135deg, #FAF8F5 0%, #F0EBE3 100%);
+    }
+    .hero-badge {
+      display: inline-block; background: #8B6F47; color: white;
+      font-size: 0.75rem; padding: 0.3rem 0.9rem; border-radius: 20px;
+      letter-spacing: 0.08em; text-transform: uppercase; font-family: sans-serif;
+      margin-bottom: 1rem;
+    }
+    .hero h1 { font-size: 2.8rem; color: #2C2C2C; margin-bottom: 0.8rem; line-height: 1.2; }
+    .hero h1 span { color: #8B6F47; }
+    .hero p { font-size: 1.1rem; color: #6B6B6B; max-width: 520px; margin: 0 auto 2.5rem; font-family: sans-serif; line-height: 1.7; }
+
+    .upload-card {
+      background: white; border-radius: 16px; padding: 2.5rem;
+      max-width: 580px; margin: 0 auto 3rem; box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    }
+    .upload-zone {
+      border: 2px dashed #D4C5B0; border-radius: 12px; padding: 2.5rem;
+      text-align: center; cursor: pointer; transition: all 0.2s;
+      background: #FAF8F5; position: relative;
+    }
+    .upload-zone:hover { border-color: #8B6F47; background: #F5EFE8; }
+    .upload-zone.dragover { border-color: #8B6F47; background: #F5EFE8; }
+    .upload-icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .upload-zone h3 { font-size: 1rem; color: #2C2C2C; margin-bottom: 0.3rem; font-family: sans-serif; }
+    .upload-zone p { font-size: 0.85rem; color: #9B9B9B; font-family: sans-serif; }
+    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+    #preview-img {
+      width: 100%; border-radius: 8px; margin-top: 1rem;
+      display: none; max-height: 280px; object-fit: cover;
+    }
+    .room-select { margin-top: 1.2rem; }
+    .room-select label { font-size: 0.85rem; color: #6B6B6B; font-family: sans-serif; display: block; margin-bottom: 0.4rem; }
+    .room-select select {
+      width: 100%; padding: 0.6rem 0.9rem; border: 1px solid #E0D8CF;
+      border-radius: 8px; font-size: 0.9rem; background: white; color: #2C2C2C;
+      font-family: sans-serif;
+    }
+    .analyze-btn {
+      width: 100%; margin-top: 1.5rem; padding: 0.95rem;
+      background: #2C2C2C; color: white; border: none; border-radius: 10px;
+      font-size: 1rem; font-family: sans-serif; cursor: pointer; transition: background 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .analyze-btn:hover { background: #8B6F47; }
+    .analyze-btn:disabled { background: #C0B8B0; cursor: not-allowed; }
+
+    .loading {
+      display: none; text-align: center; padding: 3rem;
+      max-width: 580px; margin: 0 auto;
+    }
+    .spinner {
+      width: 48px; height: 48px; border: 3px solid #E8E2D9;
+      border-top-color: #8B6F47; border-radius: 50%;
+      animation: spin 0.9s linear infinite; margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: #6B6B6B; font-family: sans-serif; font-size: 0.95rem; }
+
+    .results { display: none; max-width: 860px; margin: 0 auto 4rem; padding: 0 1.5rem; }
+
+    .vision-card {
+      background: white; border-radius: 16px; padding: 2rem 2.5rem;
+      margin-bottom: 1.5rem; box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;
+    }
+    @media (max-width: 640px) { .vision-card { grid-template-columns: 1fr; } }
+    .vision-left h2 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #2C2C2C; }
+    .vision-left .style-tag {
+      display: inline-block; background: #F0EBE3; color: #8B6F47;
+      font-size: 0.8rem; padding: 0.25rem 0.75rem; border-radius: 20px;
+      font-family: sans-serif; margin-bottom: 1rem; font-weight: 600;
+    }
+    .vision-left p { color: #555; font-size: 0.95rem; line-height: 1.8; font-family: sans-serif; }
+    .vision-right h3 { font-size: 0.85rem; color: #9B9B9B; text-transform: uppercase; letter-spacing: 0.08em; font-family: sans-serif; margin-bottom: 0.8rem; }
+    .color-swatches { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .swatch {
+      display: flex; align-items: center; gap: 0.4rem;
+      background: #FAF8F5; border-radius: 8px; padding: 0.4rem 0.7rem;
+    }
+    .swatch-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); flex-shrink: 0; }
+    .swatch span { font-size: 0.78rem; color: #555; font-family: sans-serif; }
+    .room-photo-thumb { width: 100%; border-radius: 10px; object-fit: cover; max-height: 200px; margin-top: 1rem; }
+
+    .products-section h2 {
+      font-size: 1.3rem; margin-bottom: 1rem; color: #2C2C2C;
+      font-family: sans-serif; font-weight: 600;
+    }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .product-card {
+      background: white; border-radius: 12px; padding: 1.2rem 1.4rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .product-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+    .product-store {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+      font-family: sans-serif; font-weight: 700; margin-bottom: 0.4rem;
+    }
+    .store-wayfair { color: #7B2D8B; }
+    .store-amazon { color: #E47911; }
+    .store-ikea { color: #0058A3; }
+    .product-card h4 { font-size: 0.95rem; color: #2C2C2C; margin-bottom: 0.3rem; font-family: sans-serif; }
+    .product-reason { font-size: 0.82rem; color: #7B7B7B; font-family: sans-serif; line-height: 1.5; margin-bottom: 0.8rem; }
+    .product-footer { display: flex; align-items: center; justify-content: space-between; }
+    .product-price { font-size: 1rem; font-weight: 700; color: #2C2C2C; font-family: sans-serif; }
+    .shop-btn {
+      font-size: 0.8rem; padding: 0.4rem 0.9rem; border-radius: 6px;
+      background: #2C2C2C; color: white; text-decoration: none;
+      font-family: sans-serif; transition: background 0.2s;
+    }
+    .shop-btn:hover { background: #8B6F47; }
+
+    .cta-banner {
+      background: linear-gradient(135deg, #2C2C2C 0%, #4A3728 100%);
+      border-radius: 16px; padding: 2.5rem; text-align: center; color: white;
+      margin-bottom: 2rem;
+    }
+    .cta-banner h2 { font-size: 1.6rem; margin-bottom: 0.6rem; }
+    .cta-banner p { font-size: 0.95rem; color: #C0B8B0; font-family: sans-serif; margin-bottom: 1.5rem; line-height: 1.6; }
+    .cta-btn {
+      display: inline-block; background: #8B6F47; color: white;
+      padding: 0.9rem 2rem; border-radius: 10px; text-decoration: none;
+      font-family: sans-serif; font-size: 1rem; font-weight: 600;
+      transition: background 0.2s; letter-spacing: 0.02em;
+    }
+    .cta-btn:hover { background: #7A5F3A; }
+    .try-again-btn {
+      display: block; margin: 0 auto 1rem; background: none; border: 1px solid #D4C5B0;
+      padding: 0.7rem 1.5rem; border-radius: 8px; cursor: pointer;
+      font-family: sans-serif; font-size: 0.9rem; color: #6B6B6B; transition: all 0.2s;
+    }
+    .try-again-btn:hover { border-color: #8B6F47; color: #8B6F47; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo">Olive<span>.</span></a>
+  <a href="/designers">Browse Designers</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">✨ Free AI Tool</div>
+  <h1>See Your Room <span>Transformed</span></h1>
+  <p>Upload a photo and our AI will generate a luxury redesign vision — complete with a curated shopping list.</p>
+</div>
+
+<div class="upload-card" id="upload-section">
+  <div class="upload-zone" id="drop-zone">
+    <input type="file" id="photo-input" accept="image/*" />
+    <div class="upload-icon">🏠</div>
+    <h3>Drop your photo here</h3>
+    <p>or click to browse — JPG, PNG, WEBP up to 10MB</p>
+    <img id="preview-img" alt="Room preview" />
+  </div>
+  <div class="room-select">
+    <label>What type of room is this?</label>
+    <select id="room-type">
+      <option value="living room">Living Room</option>
+      <option value="bedroom">Bedroom</option>
+      <option value="dining room">Dining Room</option>
+      <option value="kitchen">Kitchen</option>
+      <option value="bathroom">Bathroom</option>
+      <option value="home office">Home Office</option>
+      <option value="outdoor space">Outdoor Space</option>
+    </select>
+  </div>
+  <button class="analyze-btn" id="analyze-btn" disabled>Upload a photo to continue</button>
+</div>
+
+<div class="loading" id="loading-section">
+  <div class="spinner"></div>
+  <p>Analyzing your space and curating your redesign vision…</p>
+</div>
+
+<div class="results" id="results-section">
+  <div class="vision-card">
+    <div class="vision-left">
+      <h2>Your Redesign Vision</h2>
+      <div class="style-tag" id="style-tag"></div>
+      <p id="vision-text"></p>
+    </div>
+    <div class="vision-right">
+      <h3>Color Palette</h3>
+      <div class="color-swatches" id="color-swatches"></div>
+      <img id="room-thumb" class="room-photo-thumb" alt="Your room" />
+    </div>
+  </div>
+
+  <div class="products-section">
+    <h2>Curated Product Picks</h2>
+    <div class="products-grid" id="products-grid"></div>
+  </div>
+
+  <div class="cta-banner">
+    <h2>Love the vision? Make it real.</h2>
+    <p>Our designers can bring this exact aesthetic to life — handling everything from sourcing to layout planning.</p>
+    <a href="/designers" class="cta-btn">Browse Olive Designers →</a>
+  </div>
+
+  <button class="try-again-btn" id="try-again-btn">↩ Try another room</button>
+</div>
+
+<script>
+  const photoInput = document.getElementById('photo-input');
+  const previewImg = document.getElementById('preview-img');
+  const analyzeBtn = document.getElementById('analyze-btn');
+  const dropZone = document.getElementById('drop-zone');
+  const uploadSection = document.getElementById('upload-section');
+  const loadingSection = document.getElementById('loading-section');
+  const resultsSection = document.getElementById('results-section');
+
+  let selectedFile = null;
+
+  photoInput.addEventListener('change', () => {
+    const file = photoInput.files[0];
+    if (!file) return;
+    selectedFile = file;
+    const url = URL.createObjectURL(file);
+    previewImg.src = url;
+    previewImg.style.display = 'block';
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = 'Generate My Redesign Vision ✨';
+  });
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    selectedFile = file;
+    photoInput.files = e.dataTransfer.files;
+    previewImg.src = URL.createObjectURL(file);
+    previewImg.style.display = 'block';
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = 'Generate My Redesign Vision ✨';
+  });
+
+  analyzeBtn.addEventListener('click', async () => {
+    if (!selectedFile) return;
+    const roomType = document.getElementById('room-type').value;
+    const formData = new FormData();
+    formData.append('room_photo', selectedFile);
+    formData.append('room_type', roomType);
+
+    uploadSection.style.display = 'none';
+    loadingSection.style.display = 'block';
+
+    try {
+      const res = await fetch('/api/ai-flip', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      renderResults(data.result, data.imageUrl);
+    } catch (err) {
+      loadingSection.style.display = 'none';
+      uploadSection.style.display = 'block';
+      alert('Something went wrong: ' + err.message);
+    }
+  });
+
+  function getStoreClass(store) {
+    if (store === 'Wayfair') return 'store-wayfair';
+    if (store === 'Amazon') return 'store-amazon';
+    if (store === 'IKEA') return 'store-ikea';
+    return '';
+  }
+
+  function renderResults(result, imageUrl) {
+    document.getElementById('style-tag').textContent = result.style;
+    document.getElementById('vision-text').textContent = result.vision;
+    document.getElementById('room-thumb').src = imageUrl;
+
+    const swatches = document.getElementById('color-swatches');
+    swatches.innerHTML = '';
+    result.colors.forEach(c => {
+      const hex = c.match(/#[0-9A-Fa-f]{6}/)?.[0] || '#C49A3C';
+      const name = c.replace(/#[0-9A-Fa-f]{6}/, '').trim();
+      swatches.innerHTML += `<div class="swatch"><div class="swatch-dot" style="background:${hex}"></div><span>${name}</span></div>`;
+    });
+
+    const grid = document.getElementById('products-grid');
+    grid.innerHTML = '';
+    result.products.forEach(p => {
+      grid.innerHTML += `
+        <div class="product-card">
+          <div class="product-store ${getStoreClass(p.store)}">${p.store}</div>
+          <h4>${p.name}</h4>
+          <p class="product-reason">${p.reason}</p>
+          <div class="product-footer">
+            <span class="product-price">${p.price}</span>
+            <a href="${p.url}" target="_blank" class="shop-btn">Shop →</a>
+          </div>
+        </div>`;
+    });
+
+    loadingSection.style.display = 'none';
+    resultsSection.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.getElementById('try-again-btn').addEventListener('click', () => {
+    resultsSection.style.display = 'none';
+    uploadSection.style.display = 'block';
+    previewImg.style.display = 'none';
+    previewImg.src = '';
+    photoInput.value = '';
+    selectedFile = null;
+    analyzeBtn.disabled = true;
+    analyzeBtn.textContent = 'Upload a photo to continue';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+</body>
+</html>

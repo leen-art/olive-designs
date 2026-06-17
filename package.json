@@ -7,6 +7,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.2",
     "bcrypt": "^5.1.1",
     "better-sqlite3": "^9.4.3",
     "cloudinary": "^1.41.3",

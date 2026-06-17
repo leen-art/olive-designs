@@ -3,126 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up — Olive Designs</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Create Account — Olive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #FAF7F4; color: #2A2520; min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+    .left-panel {
+      background: #2A2520; display: flex; flex-direction: column; justify-content: space-between;
+      padding: 3rem; position: relative; overflow: hidden;
+    }
+    .left-panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; }
+    .left-content { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+    .brand { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; text-decoration: none; letter-spacing: 0.1em; }
+    .brand em { color: #C4A882; font-style: italic; }
+    .left-quote blockquote { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; line-height: 1.3; margin-bottom: 1rem; }
+    .left-quote blockquote em { font-style: italic; color: #C4A882; }
+    .left-quote cite { font-size: 0.72rem; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; }
+    .right-panel { display: flex; align-items: center; justify-content: center; padding: 3rem; overflow-y: auto; }
+    .form-container { width: 100%; max-width: 380px; }
+    .form-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.18em; color: #C4A882; font-weight: 500; margin-bottom: 0.8rem; display: block; }
+    .form-container h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: #2A2520; margin-bottom: 0.5rem; }
+    .form-container h1 em { font-style: italic; color: #C4A882; }
+    .form-sub { font-size: 0.8rem; color: #A89880; margin-bottom: 2rem; font-weight: 300; line-height: 1.7; }
+    .role-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: #EDE8E0; margin-bottom: 1.8rem; }
+    .role-btn { padding: 0.75rem; text-align: center; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; background: #FAF7F4; color: #A89880; transition: all 0.15s; border: none; font-family: 'Inter', sans-serif; }
+    .role-btn.active { background: #2A2520; color: white; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #A89880; margin-bottom: 0.5rem; font-weight: 500; }
+    .form-group input, .form-group select {
+      width: 100%; padding: 0.85rem 1rem; border: 1px solid #EDE8E0; background: white;
+      font-size: 0.85rem; color: #2A2520; font-family: 'Inter', sans-serif; font-weight: 300;
+      transition: border-color 0.15s; outline: none; appearance: none;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: #C4A882; }
+    .form-group input::placeholder { color: #C4B8A8; }
+    .btn-submit {
+      width: 100%; padding: 0.9rem; background: #2A2520; color: white; border: none;
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 500; transition: background 0.2s; margin-top: 0.5rem;
+    }
+    .btn-submit:hover { background: #C4A882; color: #2A2520; }
+    .form-footer { margin-top: 1.5rem; font-size: 0.78rem; color: #A89880; text-align: center; font-weight: 300; }
+    .form-footer a { color: #2A2520; text-decoration: none; border-bottom: 1px solid #EDE8E0; transition: border-color 0.15s; }
+    .form-footer a:hover { border-color: #C4A882; }
+    .error-msg { background: #FDF0EF; border: 1px solid #F0D0CE; color: #8A3A34; padding: 0.8rem 1rem; font-size: 0.78rem; margin-bottom: 1.2rem; display: none; font-weight: 300; }
+    @media (max-width: 768px) { body { grid-template-columns: 1fr; } .left-panel { display: none; } }
+  </style>
 </head>
 <body>
-<div class="auth-page">
-  <div class="auth-visual">
-    <div class="auth-visual-content">
-      <span class="brand-large">Olive Designs</span>
-      <p>A curated marketplace where beautiful rooms come to life — designed by real people, for real homes.</p>
+<div class="left-panel">
+  <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&q=80" alt="Interior" />
+  <div class="left-content">
+    <a href="/" class="brand">Olive<em>.</em></a>
+    <div class="left-quote">
+      <blockquote>The details are not the details. They make the <em>design.</em></blockquote>
+      <cite>— Charles Eames</cite>
     </div>
   </div>
-  <div class="auth-form-side">
-    <h1>Create your account</h1>
-    <p class="subtitle">Already have an account? <a href="/login">Sign in</a></p>
-    <div class="alert alert-error" id="errorAlert"></div>
-    <form id="signupForm" novalidate>
-      <div class="form-group">
-        <label>I want to</label>
-        <div class="role-selector">
-          <div class="role-option">
-            <input type="radio" name="role" id="role-customer" value="customer" checked>
-            <label for="role-customer">
-              <span class="role-icon">🛋️</span>
-              <span class="role-name">Get Designs</span>
-              <span class="role-desc">I want my room designed by a professional</span>
-            </label>
-          </div>
-          <div class="role-option">
-            <input type="radio" name="role" id="role-designer" value="designer">
-            <label for="role-designer">
-              <span class="role-icon">🎨</span>
-              <span class="role-name">Design Rooms</span>
-              <span class="role-desc">I'm a designer and want to take on clients</span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="form-group" id="designerCodeGroup" style="display:none;">
-        <label for="designer_code">Designer Access Code</label>
-        <input type="password" id="designer_code" name="designer_code" placeholder="Enter your access code">
-      </div>
-      <div class="form-group">
-        <label for="full_name">Full Name</label>
-        <input type="text" id="full_name" name="full_name" placeholder="Your full name" required>
-      </div>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" placeholder="you@example.com" required>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="At least 6 characters" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;" id="submitBtn">Create Account</button>
-    </form>
+</div>
+<div class="right-panel">
+  <div class="form-container">
+    <span class="form-eyebrow">Join Olive</span>
+    <h1>Create your <em>account</em></h1>
+    <p class="form-sub">Start your design journey today.</p>
+    <div class="role-toggle">
+      <button class="role-btn active" id="btn-customer" onclick="setRole('customer')">I'm a Customer</button>
+      <button class="role-btn" id="btn-designer" onclick="setRole('designer')">I'm a Designer</button>
+    </div>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="fullName" placeholder="Your full name" />
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="you@example.com" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Min. 6 characters" />
+    </div>
+    <button class="btn-submit" onclick="signup()">Create Account</button>
+    <div class="form-footer">
+      Already have an account? <a href="/login">Sign in</a>
+    </div>
   </div>
 </div>
 <script>
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('role') === 'designer') {
-    document.getElementById('role-designer').checked = true;
-    document.getElementById('designerCodeGroup').style.display = 'block';
+  let selectedRole = new URLSearchParams(window.location.search).get('role') || 'customer';
+  setRole(selectedRole);
+
+  function setRole(role) {
+    selectedRole = role;
+    document.getElementById('btn-customer').classList.toggle('active', role === 'customer');
+    document.getElementById('btn-designer').classList.toggle('active', role === 'designer');
   }
 
-  document.querySelectorAll('input[name="role"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      const codeGroup = document.getElementById('designerCodeGroup');
-      codeGroup.style.display = this.value === 'designer' ? 'block' : 'none';
-    });
-  });
-
-  document.getElementById('signupForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    const errorAlert = document.getElementById('errorAlert');
-    errorAlert.classList.remove('show');
-
-    const full_name = document.getElementById('full_name').value.trim();
-    const email = document.getElementById('email').value.trim();
+  async function signup() {
+    const fullName = document.getElementById('fullName').value;
+    const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const role = document.querySelector('input[name="role"]:checked').value;
-    const designer_code = document.getElementById('designer_code').value;
-
-    if (!full_name || !email || !password) {
-      errorAlert.textContent = 'Please fill in all fields.';
-      errorAlert.classList.add('show');
-      return;
+    const errorMsg = document.getElementById('errorMsg');
+    errorMsg.style.display = 'none';
+    if (!fullName || !email || !password) { errorMsg.textContent = 'Please fill in all fields.'; errorMsg.style.display = 'block'; return; }
+    const res = await fetch('/signup', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fullName, email, password, role: selectedRole })
+    });
+    const data = await res.json();
+    if (data.success) {
+      window.location.href = selectedRole === 'designer' ? '/dashboard/designer' : '/dashboard/customer';
+    } else {
+      errorMsg.textContent = data.error || 'Something went wrong. Please try again.';
+      errorMsg.style.display = 'block';
     }
-
-    if (role === 'designer' && designer_code !== 'OLIVE2024') {
-      errorAlert.textContent = 'Invalid designer access code.';
-      errorAlert.classList.add('show');
-      return;
-    }
-
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Creating account…';
-
-    try {
-      const res = await fetch('/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name, email, password, role })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        errorAlert.textContent = data.error || 'Something went wrong.';
-        errorAlert.classList.add('show');
-        btn.disabled = false;
-        btn.textContent = 'Create Account';
-        return;
-      }
-      window.location.href = data.role === 'designer' ? '/dashboard/designer' : '/dashboard/customer';
-    } catch (err) {
-      errorAlert.textContent = 'Network error. Please try again.';
-      errorAlert.classList.add('show');
-      btn.disabled = false;
-      btn.textContent = 'Create Account';
-    }
-  });
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') signup(); });
 </script>
 </body>
 </html>

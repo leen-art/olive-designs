@@ -3,71 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign In — Olive Designs</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Sign In — Olive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #FAF7F4; color: #2A2520; min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; }
+    .left-panel {
+      background: #2A2520; display: flex; flex-direction: column; justify-content: space-between;
+      padding: 3rem; position: relative; overflow: hidden;
+    }
+    .left-panel img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; }
+    .left-content { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+    .brand { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; text-decoration: none; letter-spacing: 0.1em; }
+    .brand em { color: #C4A882; font-style: italic; }
+    .left-quote { }
+    .left-quote blockquote { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; line-height: 1.3; margin-bottom: 1rem; }
+    .left-quote blockquote em { font-style: italic; color: #C4A882; }
+    .left-quote cite { font-size: 0.72rem; color: rgba(255,255,255,0.4); letter-spacing: 0.08em; text-transform: uppercase; }
+    .right-panel { display: flex; align-items: center; justify-content: center; padding: 3rem; }
+    .form-container { width: 100%; max-width: 380px; }
+    .form-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.18em; color: #C4A882; font-weight: 500; margin-bottom: 0.8rem; display: block; }
+    .form-container h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: #2A2520; margin-bottom: 0.5rem; }
+    .form-container h1 em { font-style: italic; color: #C4A882; }
+    .form-sub { font-size: 0.8rem; color: #A89880; margin-bottom: 2.5rem; font-weight: 300; line-height: 1.7; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #A89880; margin-bottom: 0.5rem; font-weight: 500; }
+    .form-group input {
+      width: 100%; padding: 0.85rem 1rem; border: 1px solid #EDE8E0; background: white;
+      font-size: 0.85rem; color: #2A2520; font-family: 'Inter', sans-serif; font-weight: 300;
+      transition: border-color 0.15s; outline: none;
+    }
+    .form-group input:focus { border-color: #C4A882; }
+    .form-group input::placeholder { color: #C4B8A8; }
+    .btn-submit {
+      width: 100%; padding: 0.9rem; background: #2A2520; color: white; border: none;
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-weight: 500; transition: background 0.2s; margin-top: 0.5rem;
+    }
+    .btn-submit:hover { background: #C4A882; color: #2A2520; }
+    .form-footer { margin-top: 1.5rem; font-size: 0.78rem; color: #A89880; text-align: center; font-weight: 300; }
+    .form-footer a { color: #2A2520; text-decoration: none; border-bottom: 1px solid #EDE8E0; transition: border-color 0.15s; }
+    .form-footer a:hover { border-color: #C4A882; }
+    .error-msg { background: #FDF0EF; border: 1px solid #F0D0CE; color: #8A3A34; padding: 0.8rem 1rem; font-size: 0.78rem; margin-bottom: 1.2rem; display: none; font-weight: 300; }
+    @media (max-width: 768px) { body { grid-template-columns: 1fr; } .left-panel { display: none; } }
+  </style>
 </head>
 <body>
-<div class="auth-page">
-  <div class="auth-visual">
-    <div class="auth-visual-content">
-      <span class="brand-large">Olive Designs</span>
-      <p>Beautiful interiors, crafted by designers who care. Welcome back.</p>
+<div class="left-panel">
+  <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80" alt="Interior" />
+  <div class="left-content">
+    <a href="/" class="brand">Olive<em>.</em></a>
+    <div class="left-quote">
+      <blockquote>Design is not just what it looks like. Design is how it <em>feels.</em></blockquote>
+      <cite>— Steve Jobs</cite>
     </div>
   </div>
-  <div class="auth-form-side">
-    <h1>Welcome back</h1>
-    <p class="subtitle">Don't have an account? <a href="/signup">Sign up free</a></p>
-    <div class="alert alert-error" id="errorAlert"></div>
-    <form id="loginForm" novalidate>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" placeholder="you@example.com" required>
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Your password" required>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:8px;" id="submitBtn">Sign In</button>
-    </form>
+</div>
+<div class="right-panel">
+  <div class="form-container">
+    <span class="form-eyebrow">Welcome back</span>
+    <h1>Sign <em>in</em></h1>
+    <p class="form-sub">Continue your design journey.</p>
+    <div class="error-msg" id="errorMsg"></div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="you@example.com" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" />
+    </div>
+    <button class="btn-submit" onclick="login()">Sign In</button>
+    <div class="form-footer">
+      Don't have an account? <a href="/signup">Create one</a>
+    </div>
   </div>
 </div>
 <script>
-  document.getElementById('loginForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    const errorAlert = document.getElementById('errorAlert');
-    errorAlert.classList.remove('show');
-    const email = document.getElementById('email').value.trim();
+  async function login() {
+    const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    if (!email || !password) {
-      errorAlert.textContent = 'Please enter your email and password.';
-      errorAlert.classList.add('show');
-      return;
-    }
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Signing in…';
-    try {
-      const res = await fetch('/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        errorAlert.textContent = data.error || 'Invalid credentials.';
-        errorAlert.classList.add('show');
-        btn.disabled = false;
-        btn.textContent = 'Sign In';
-        return;
-      }
+    const errorMsg = document.getElementById('errorMsg');
+    errorMsg.style.display = 'none';
+    if (!email || !password) { errorMsg.textContent = 'Please fill in all fields.'; errorMsg.style.display = 'block'; return; }
+    const res = await fetch('/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (data.success) {
       window.location.href = data.role === 'designer' ? '/dashboard/designer' : '/dashboard/customer';
-    } catch (err) {
-      errorAlert.textContent = 'Network error. Please try again.';
-      errorAlert.classList.add('show');
-      btn.disabled = false;
-      btn.textContent = 'Sign In';
+    } else {
+      errorMsg.textContent = data.error || 'Invalid email or password.';
+      errorMsg.style.display = 'block';
     }
-  });
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') login(); });
 </script>
 </body>
 </html>

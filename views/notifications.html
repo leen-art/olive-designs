@@ -3,93 +3,89 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notifications — Olive Designs</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Notifications — Olive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    .notif-item { background: var(--white); border-radius: 12px; border: 1px solid var(--border); padding: 16px 20px; margin-bottom: 10px; display: flex; align-items: flex-start; gap: 14px; cursor: pointer; transition: all 0.2s; }
-    .notif-item:hover { box-shadow: 0 4px 16px var(--shadow); transform: translateY(-1px); }
-    .notif-item.unread { border-left: 3px solid var(--olive); }
-    .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--olive); margin-top: 6px; flex-shrink: 0; }
-    .notif-dot.read { background: var(--border); }
-    .notif-message { font-size: 0.9rem; color: var(--text); margin-bottom: 4px; }
-    .notif-time { font-size: 0.78rem; color: var(--muted); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #FAF7F4; color: #2A2520; display: flex; min-height: 100vh; }
+    aside { width: 230px; background: #1C1C1C; display: flex; flex-direction: column; padding: 2.5rem 1.8rem; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh; }
+    .brand { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; color: white; text-decoration: none; letter-spacing: 0.1em; margin-bottom: 3rem; display: block; }
+    .brand em { color: #C4A882; font-style: italic; }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li a { display: block; padding: 0.55rem 0.8rem; color: #7A7168; text-decoration: none; font-size: 0.8rem; font-weight: 300; border-radius: 4px; transition: all 0.15s; letter-spacing: 0.04em; }
+    .sidebar-nav li a:hover { color: #FAF7F4; }
+    .sidebar-nav li a.active { color: white; }
+    .sidebar-bottom { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid #2A2A2A; }
+    main { flex: 1; margin-left: 230px; padding: 4rem 5rem; max-width: 800px; }
+    .page-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid #EDE8E0; }
+    .page-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 300; color: #2A2520; }
+    .page-header h1 em { font-style: italic; color: #C4A882; }
+    .page-header p { font-size: 0.78rem; color: #A89880; margin-top: 0.4rem; font-weight: 300; text-transform: uppercase; letter-spacing: 0.06em; }
+    .notif-list { display: flex; flex-direction: column; gap: 1px; background: #EDE8E0; }
+    .notif-item { background: #FAF7F4; padding: 1.5rem 2rem; transition: background 0.15s; display: flex; align-items: flex-start; gap: 1.5rem; }
+    .notif-item:hover { background: white; }
+    .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: #C4A882; flex-shrink: 0; margin-top: 6px; }
+    .notif-dot.read { background: #EDE8E0; }
+    .notif-content { flex: 1; }
+    .notif-message { font-size: 0.85rem; color: #2A2520; font-weight: 300; line-height: 1.6; margin-bottom: 0.3rem; }
+    .notif-time { font-size: 0.7rem; color: #A89880; letter-spacing: 0.04em; }
+    .notif-type { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: #C4A882; font-weight: 500; margin-bottom: 0.3rem; display: block; }
+    .empty { text-align: center; padding: 5rem; background: #FAF7F4; }
+    .empty h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 300; margin-bottom: 0.5rem; }
+    .empty p { font-size: 0.8rem; color: #A89880; font-weight: 300; }
   </style>
 </head>
 <body>
-<div class="dashboard-layout">
-  <aside class="sidebar">
-    <div class="brand-wrap">
-      <a href="/" class="brand" style="font-size:1.3rem;text-decoration:none;">Olive Designs</a>
-    </div>
-    <ul class="sidebar-nav" id="sidebarNav"></ul>
-    <div class="sidebar-bottom">
-      <ul class="sidebar-nav" style="padding:0;">
-        <li><a href="#"><span id="nameDisplay">Account</span></a></li>
-        <li><a href="#" onclick="logout(event)">Sign Out</a></li>
-      </ul>
-    </div>
-  </aside>
-  <main class="dashboard-main">
-    <div class="page-header">
-      <h1>Notifications</h1>
-      <p>Stay up to date on your projects</p>
-    </div>
-    <div id="notifList"></div>
-  </main>
-</div>
+<aside>
+  <a href="/" class="brand">Olive<em>.</em></a>
+  <ul class="sidebar-nav">
+    <li><a href="/dashboard/customer">Overview</a></li>
+    <li><a href="/ai-flip">AI Flip Preview</a></li>
+    <li><a href="/project/new">New Project</a></li>
+    <li><a href="/designers">Designers</a></li>
+    <li><a href="/notifications" class="active">Notifications</a></li>
+  </ul>
+  <div class="sidebar-bottom">
+    <ul class="sidebar-nav" style="padding:0;">
+      <li><a href="#"><span id="nameDisplay">Account</span></a></li>
+      <li><a href="#" onclick="logout(event)">Sign Out</a></li>
+    </ul>
+  </div>
+</aside>
+<main>
+  <div class="page-header">
+    <h1>Notifi<em>cations</em></h1>
+    <p>Your latest updates</p>
+  </div>
+  <div class="notif-list" id="notifList">
+    <div class="empty"><p>Loading...</p></div>
+  </div>
+</main>
 <script>
   async function logout(e) { e.preventDefault(); await fetch('/logout', { method: 'POST' }); window.location.href = '/'; }
-
-  function timeAgo(dateStr) {
-    const diff = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return 'Just now';
-    if (mins < 60) return mins + 'm ago';
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return hours + 'h ago';
-    return Math.floor(hours / 24) + 'd ago';
-  }
-
-  async function init() {
-    const meRes = await fetch('/api/me');
-    const me = await meRes.json();
-    if (!me.loggedIn) return window.location.href = '/login';
-    document.getElementById('nameDisplay').textContent = me.fullName.split(' ')[0];
-
-    const nav = document.getElementById('sidebarNav');
-    if (me.role === 'customer') {
-      nav.innerHTML = `
-        <li><a href="/dashboard/customer">My Projects</a></li>
-        <li><a href="/project/new">New Project</a></li>
-        <li><a href="/designers">Browse Designers</a></li>
-        <li><a href="/notifications" class="active">Notifications</a></li>`;
-    } else {
-      nav.innerHTML = `
-        <li><a href="/dashboard/designer">Dashboard</a></li>
-        <li><a href="/notifications" class="active">Notifications</a></li>`;
-    }
-
+  fetch('/api/me').then(r => r.json()).then(data => {
+    if (!data.loggedIn) return window.location.href = '/login';
+    document.getElementById('nameDisplay').textContent = data.fullName.split(' ')[0];
+  });
+  async function loadNotifications() {
     const res = await fetch('/api/notifications');
     const notifications = await res.json();
     const list = document.getElementById('notifList');
-
     if (!notifications.length) {
-      list.innerHTML = `<div style="text-align:center;padding:80px 40px;"><h3 style="font-size:1.1rem;margin-bottom:8px;color:var(--text);">No notifications yet</h3><p style="color:var(--muted);font-weight:300;">You'll be notified when something happens on your projects.</p></div>`;
+      list.innerHTML = '<div class="empty"><h3>All caught up</h3><p>No notifications yet.</p></div>';
       return;
     }
-
     list.innerHTML = notifications.map(n => `
-      <div class="notif-item ${!n.read_at ? 'unread' : ''}" onclick="${n.project_id ? `window.location.href='/project/${n.project_id}'` : ''}">
-        <div class="notif-dot ${n.read_at ? 'read' : ''}"></div>
-        <div>
+      <div class="notif-item">
+        <div class="notif-dot ${n.read ? 'read' : ''}"></div>
+        <div class="notif-content">
+          <span class="notif-type">${n.type}</span>
           <div class="notif-message">${n.message}</div>
-          <div class="notif-time">${timeAgo(n.created_at)}</div>
+          <div class="notif-time">${new Date(n.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
-
-  init();
+  loadNotifications();
 </script>
 </body>
 </html>

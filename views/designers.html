@@ -3,86 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browse Designers — Olive Designs</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Designers — Olive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    .designer-card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; cursor: pointer; }
-    .designer-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--shadow-md); }
-    .designer-card-img { height: 180px; background: linear-gradient(135deg, #c8d4ac, #8a9e5f); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
-    .designer-card-body { padding: 20px; }
-    .stars { color: #c9a84c; letter-spacing: 2px; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #FAF7F4; color: #2A2520; }
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.4rem 4rem; display: flex; align-items: center; justify-content: space-between; background: rgba(250,247,244,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #EDE8E0; }
+    .brand { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 300; color: #2A2520; text-decoration: none; letter-spacing: 0.1em; }
+    .brand em { color: #C4A882; font-style: italic; }
+    .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 0.78rem; color: #7A7168; text-decoration: none; letter-spacing: 0.06em; }
+    .nav-links a:hover { color: #2A2520; }
+    .nav-cta { background: #2A2520; color: white !important; padding: 0.6rem 1.4rem; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; }
+    .nav-cta:hover { background: #C4A882 !important; color: #2A2520 !important; }
+    .page-hero { padding: 8rem 6rem 4rem; border-bottom: 1px solid #EDE8E0; }
+    .page-hero-eyebrow { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.18em; color: #C4A882; font-weight: 500; display: block; margin-bottom: 1rem; }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; font-weight: 300; color: #2A2520; line-height: 1.1; }
+    .page-hero h1 em { font-style: italic; color: #C4A882; }
+    .page-hero p { font-size: 0.85rem; color: #A89880; margin-top: 1rem; font-weight: 300; line-height: 1.8; max-width: 500px; }
+    .designers-section { padding: 4rem 6rem; }
+    .designers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: #EDE8E0; }
+    .designer-card { background: #FAF7F4; padding: 2.5rem; cursor: pointer; transition: background 0.15s; }
+    .designer-card:hover { background: white; }
+    .designer-avatar { width: 64px; height: 64px; border-radius: 50%; background: #EDE8E0; margin-bottom: 1.5rem; overflow: hidden; }
+    .designer-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .designer-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 0.3rem; color: #2A2520; }
+    .designer-specialty { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: #C4A882; margin-bottom: 0.8rem; font-weight: 500; }
+    .designer-bio { font-size: 0.78rem; color: #A89880; line-height: 1.7; font-weight: 300; margin-bottom: 1.2rem; }
+    .designer-stats { font-size: 0.7rem; color: #A89880; display: flex; gap: 1.5rem; padding-top: 1rem; border-top: 1px solid #EDE8E0; }
+    .stat span { display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: #2A2520; font-weight: 300; }
+    .empty { padding: 6rem; text-align: center; background: #FAF7F4; }
+    .empty h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; margin-bottom: 0.5rem; }
+    .empty p { font-size: 0.8rem; color: #A89880; font-weight: 300; }
   </style>
 </head>
 <body>
-<div class="dashboard-layout">
-  <aside class="sidebar">
-    <div class="brand-wrap">
-      <a href="/" class="brand" style="font-size:1.3rem;text-decoration:none;">Olive Designs</a>
-    </div>
-    <ul class="sidebar-nav" id="sidebarNav"></ul>
-    <div class="sidebar-bottom">
-      <ul class="sidebar-nav" style="padding:0;">
-        <li><a href="#"><span class="nav-icon">😊</span> <span id="nameDisplay">Account</span></a></li>
-        <li><a href="#" onclick="logout(event)"><span class="nav-icon">→</span> Sign Out</a></li>
-      </ul>
-    </div>
-  </aside>
-  <main class="dashboard-main">
-    <div class="page-header">
-      <h1>Browse Designers</h1>
-      <p>Find the perfect designer for your space</p>
-    </div>
-    <div id="designersGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;"></div>
-  </main>
+<nav>
+  <a href="/" class="brand">Olive<em>.</em></a>
+  <ul class="nav-links">
+    <li><a href="/dashboard/customer">Dashboard</a></li>
+    <li><a href="/ai-flip">AI Flip Preview</a></li>
+    <li><a href="/signup" class="nav-cta">Get Started</a></li>
+  </ul>
+</nav>
+<div class="page-hero">
+  <span class="page-hero-eyebrow">Our Designers</span>
+  <h1>Meet the <em>talent</em></h1>
+  <p>Every designer on Olive is vetted for quality, creativity, and client communication. Browse profiles and find your perfect match.</p>
+</div>
+<div class="designers-section">
+  <div class="designers-grid" id="designersGrid">
+    <div class="empty"><p>Loading designers...</p></div>
+  </div>
 </div>
 <script>
-  async function logout(e) { e.preventDefault(); await fetch('/logout', { method: 'POST' }); window.location.href = '/'; }
-
-  function stars(rating) {
-    const full = Math.round(rating || 0);
-    return '★'.repeat(full) + '☆'.repeat(5 - full);
-  }
-
-  async function init() {
-    const meRes = await fetch('/api/me');
-    const me = await meRes.json();
-    if (!me.loggedIn) return window.location.href = '/login';
-    document.getElementById('nameDisplay').textContent = me.fullName.split(' ')[0];
-
-    const nav = document.getElementById('sidebarNav');
-    if (me.role === 'customer') {
-      nav.innerHTML = `
-        <li><a href="/dashboard/customer"><span class="nav-icon">🏠</span> My Projects</a></li>
-        <li><a href="/project/new"><span class="nav-icon">✨</span> New Project</a></li>
-        <li><a href="/designers" class="active"><span class="nav-icon">👤</span> Browse Designers</a></li>`;
-    } else {
-      nav.innerHTML = `<li><a href="/dashboard/designer"><span class="nav-icon">✨</span> Dashboard</a></li>`;
-    }
-
+  const avatars = [
+    'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80',
+    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80'
+  ];
+  async function loadDesigners() {
     const res = await fetch('/api/designers');
     const designers = await res.json();
     const grid = document.getElementById('designersGrid');
-
     if (!designers.length) {
-      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px 40px;"><div style="font-size:3rem;margin-bottom:16px;">🎨</div><h3>No designers yet</h3></div>`;
+      grid.innerHTML = '<div class="empty"><h3>No designers yet</h3><p>Check back soon.</p></div>';
       return;
     }
-
-    grid.innerHTML = designers.map(d => `
+    grid.innerHTML = designers.map((d, i) => `
       <div class="designer-card">
-        <div class="designer-card-img">${d.avatar_path ? `<img src="${d.avatar_path}" style="width:100%;height:100%;object-fit:cover;">` : '🎨'}</div>
-        <div class="designer-card-body">
-          <h3 style="font-size:1.1rem;margin-bottom:4px;">${d.full_name}</h3>
-          <div style="font-size:0.82rem;color:var(--rose);font-weight:500;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">${d.style_specialties || 'Interior Designer'}</div>
-          <div class="stars">${stars(d.rating)}</div>
-          <div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">${d.completed_projects || 0} projects completed</div>
-          ${d.bio ? `<p style="font-size:0.85rem;color:var(--muted);margin-top:10px;line-height:1.5;">${d.bio}</p>` : ''}
+        <div class="designer-avatar"><img src="${avatars[i % avatars.length]}" alt="${d.full_name}" /></div>
+        <h3>${d.full_name}</h3>
+        <div class="designer-specialty">${d.style_specialties || 'Interior Design'}</div>
+        <p class="designer-bio">${d.bio || 'Passionate about creating beautiful, functional spaces.'}</p>
+        <div class="designer-stats">
+          <div class="stat"><span>${d.completed_projects || 0}</span>Projects</div>
+          <div class="stat"><span>${d.years_experience || 0}</span>Years Exp.</div>
+          <div class="stat"><span>${d.rating ? Number(d.rating).toFixed(1) : '—'}</span>Rating</div>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
-
-  init();
+  loadDesigners();
 </script>
 </body>
 </html>

@@ -26,10 +26,12 @@ const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const paymentRoutes = require('./routes/payments');
 const { requireRole } = require('./middleware/auth');
+const aiFlipRoutes = require('./routes/ai-flip');
 
 app.use('/', authRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', paymentRoutes);
+app.use('/', aiFlipRoutes);
 
 app.get('/', (req, res) => {
   if (req.session.userId) return res.redirect(req.session.role === 'designer' ? '/dashboard/designer' : '/dashboard/customer');

@@ -3,59 +3,147 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Projects — Olive Designs</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Dashboard — Olive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    .project-card { background: var(--white); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; transition: all 0.2s; cursor: pointer; }
-    .project-card:hover { transform: translateY(-2px); box-shadow: 0 8px 32px var(--shadow-md); }
-    .project-card-img { height: 160px; background: linear-gradient(135deg, #c8d4ac, #8a9e5f); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; overflow: hidden; }
-    .project-card-img img { width: 100%; height: 100%; object-fit: cover; }
-    .project-card-body { padding: 20px; }
-    .project-card-body h3 { font-size: 1rem; margin-bottom: 6px; }
-    .status-badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; }
-    .status-submitted { background: #f0f4eb; color: #4f5c35; }
-    .status-assigned { background: #fdf6e3; color: #8a6914; }
-    .status-in_progress { background: #e8f0fe; color: #1a56a0; }
-    .status-review { background: #fdf0ef; color: #9c3a34; }
-    .status-completed { background: #f0f4eb; color: #4f5c35; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #F7F4F0; color: #1A1A1A; display: flex; min-height: 100vh; }
+
+    aside {
+      width: 220px; background: #1A1A1A; display: flex;
+      flex-direction: column; padding: 2rem 1.5rem; flex-shrink: 0; position: fixed; top: 0; left: 0; height: 100vh;
+    }
+    .brand { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; color: white; text-decoration: none; letter-spacing: 0.08em; margin-bottom: 3rem; display: block; }
+    .brand em { color: #C4956A; font-style: italic; }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav li a {
+      display: block; padding: 0.5rem 0.6rem; color: #888; text-decoration: none;
+      font-size: 0.82rem; font-weight: 300; letter-spacing: 0.02em; border-radius: 4px; transition: all 0.15s;
+    }
+    .sidebar-nav li a:hover { color: white; }
+    .sidebar-nav li a.active { color: white; }
+    .sidebar-bottom { margin-top: auto; padding-top: 1.5rem; border-top: 1px solid #2A2A2A; }
+
+    main { flex: 1; margin-left: 220px; padding: 3.5rem 4rem; }
+
+    .top-bar { margin-bottom: 3rem; }
+    .top-bar h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 300; color: #1A1A1A; line-height: 1.1; }
+    .top-bar h1 em { font-style: italic; color: #C4956A; }
+    .top-bar p { font-size: 0.82rem; color: #888; margin-top: 0.4rem; letter-spacing: 0.02em; font-weight: 300; }
+
+    .flip-banner {
+      background: #1A1A1A; border-radius: 2px; padding: 2.5rem 3rem;
+      margin-bottom: 3rem; display: flex; align-items: center; justify-content: space-between; gap: 3rem;
+      position: relative; overflow: hidden;
+    }
+    .flip-banner::before {
+      content: ''; position: absolute; top: 0; right: 0; width: 300px; height: 100%;
+      background: linear-gradient(135deg, transparent, rgba(196,149,106,0.08));
+    }
+    .flip-banner-text h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; font-weight: 300; color: white; line-height: 1.2; margin-bottom: 0.6rem; }
+    .flip-banner-text h2 em { font-style: italic; color: #C4956A; }
+    .flip-banner-text p { font-size: 0.82rem; color: #777; line-height: 1.8; font-weight: 300; max-width: 440px; }
+    .flip-btn {
+      padding: 0.75rem 1.8rem; border-radius: 2px; text-decoration: none; font-size: 0.78rem;
+      font-weight: 400; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.1em;
+      text-transform: uppercase; border: 1px solid #C4956A; color: #C4956A;
+      transition: all 0.2s; position: relative; z-index: 1;
+    }
+    .flip-btn:hover { background: #C4956A; color: white; }
+
+    .actions-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: #E5E0D8; margin-bottom: 3rem; border-radius: 2px; overflow: hidden; }
+    .action-tile {
+      background: white; padding: 1.8rem; text-decoration: none; color: #1A1A1A;
+      transition: background 0.15s; display: block;
+    }
+    .action-tile:hover { background: #FAF8F5; }
+    .action-tile .tile-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: #C4956A; margin-bottom: 0.6rem; font-weight: 500; }
+    .action-tile .tile-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 400; margin-bottom: 0.4rem; }
+    .action-tile .tile-desc { font-size: 0.78rem; color: #888; line-height: 1.6; font-weight: 300; }
+
+    .projects-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: #888; margin-bottom: 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+    .projects-label a { color: #C4956A; text-decoration: none; font-size: 0.65rem; letter-spacing: 0.08em; }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1px; background: #E5E0D8; border-radius: 2px; overflow: hidden; }
+    .project-tile { background: white; cursor: pointer; transition: background 0.15s; }
+    .project-tile:hover { background: #FAF8F5; }
+    .project-img { height: 180px; background: #E5E0D8; overflow: hidden; }
+    .project-img img { width: 100%; height: 100%; object-fit: cover; }
+    .project-body { padding: 1.2rem 1.4rem; }
+    .project-body h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; margin-bottom: 0.3rem; }
+    .project-meta { font-size: 0.75rem; color: #888; font-weight: 300; margin-top: 0.2rem; }
+    .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+    .dot-submitted, .dot-assigned { background: #C4956A; }
+    .dot-in_progress { background: #6A8FC4; }
+    .dot-review { background: #C46A6A; }
+    .dot-completed { background: #6AC48F; }
+    .status-text { font-size: 0.72rem; color: #888; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; }
+
+    .empty-state { grid-column: 1/-1; background: white; padding: 4rem; text-align: center; }
+    .empty-state h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 300; margin-bottom: 0.5rem; }
+    .empty-state p { font-size: 0.82rem; color: #888; margin-bottom: 1.5rem; font-weight: 300; line-height: 1.7; }
+    .btn-outline { display: inline-block; border: 1px solid #1A1A1A; color: #1A1A1A; padding: 0.6rem 1.4rem; text-decoration: none; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.2s; }
+    .btn-outline:hover { background: #1A1A1A; color: white; }
   </style>
 </head>
 <body>
-<div class="dashboard-layout">
-  <aside class="sidebar">
-    <div class="brand-wrap">
-      <a href="/" class="brand" style="font-size:1.3rem;text-decoration:none;">Olive Designs</a>
-    </div>
-    <ul class="sidebar-nav">
-      <li><a href="/dashboard/customer" class="active">My Projects</a></li>
-      <li><a href="/project/new">New Project</a></li>
-      <li><a href="/designers">Browse Designers</a></li>
-      <li><a href="/notifications">Notifications</a></li>
+<aside>
+  <a href="/" class="brand">Olive<em>.</em></a>
+  <ul class="sidebar-nav">
+    <li><a href="/dashboard/customer" class="active">Overview</a></li>
+    <li><a href="/ai-flip">AI Flip Preview</a></li>
+    <li><a href="/project/new">New Project</a></li>
+    <li><a href="/designers">Designers</a></li>
+    <li><a href="/notifications">Notifications</a></li>
+  </ul>
+  <div class="sidebar-bottom">
+    <ul class="sidebar-nav" style="padding:0;">
+      <li><a href="#"><span id="nameDisplay">Account</span></a></li>
+      <li><a href="#" onclick="logout(event)">Sign Out</a></li>
     </ul>
-    <div class="sidebar-bottom">
-      <ul class="sidebar-nav" style="padding:0;">
-        <li><a href="#"><span id="nameDisplay">Account</span></a></li>
-        <li><a href="#" onclick="logout(event)">Sign Out</a></li>
-      </ul>
+  </div>
+</aside>
+
+<main>
+  <div class="top-bar">
+    <h1>Good to see you, <em id="firstName">—</em></h1>
+    <p>Your design journey continues here.</p>
+  </div>
+
+  <div class="flip-banner">
+    <div class="flip-banner-text">
+      <h2>See any space <em>reimagined</em></h2>
+      <p>Upload a photo of any room or property — even a fixer-upper — and our AI generates a full luxury redesign vision with a curated product list in seconds.</p>
     </div>
-  </aside>
-  <main class="dashboard-main">
-    <div class="page-header">
-      <h1>My Projects</h1>
-      <p>Track your active designs and past projects</p>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
-      <div></div>
-      <a href="/project/new" class="btn btn-primary">+ New Project</a>
-    </div>
-    <div id="projectsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;">
-      <div style="grid-column:1/-1;text-align:center;padding:80px 40px;">
-        <div style="font-size:2rem;">⏳</div>
-        <p style="color:var(--muted);margin-top:12px;">Loading projects...</p>
-      </div>
-    </div>
-  </main>
-</div>
+    <a href="/ai-flip" class="flip-btn">Try AI Flip Preview</a>
+  </div>
+
+  <div class="actions-row">
+    <a href="/ai-flip" class="action-tile">
+      <div class="tile-label">Free Tool</div>
+      <div class="tile-title">AI Flip Preview</div>
+      <div class="tile-desc">Instant redesign vision for any space.</div>
+    </a>
+    <a href="/project/new" class="action-tile">
+      <div class="tile-label">Get Started</div>
+      <div class="tile-title">Hire a Designer</div>
+      <div class="tile-desc">Work with a luxury interior designer end to end.</div>
+    </a>
+    <a href="/designers" class="action-tile">
+      <div class="tile-label">Explore</div>
+      <div class="tile-title">Browse Designers</div>
+      <div class="tile-desc">View portfolios, styles, and availability.</div>
+    </a>
+  </div>
+
+  <div class="projects-label">
+    <span>My Projects</span>
+    <a href="/project/new">+ New</a>
+  </div>
+  <div class="projects-grid" id="projectsGrid">
+    <div class="empty-state"><p>Loading...</p></div>
+  </div>
+</main>
+
 <script>
   async function logout(e) {
     e.preventDefault();
@@ -66,6 +154,7 @@
   fetch('/api/me').then(r => r.json()).then(data => {
     if (!data.loggedIn) return window.location.href = '/login';
     document.getElementById('nameDisplay').textContent = data.fullName.split(' ')[0];
+    document.getElementById('firstName').textContent = data.fullName.split(' ')[0];
   });
 
   async function loadProjects() {
@@ -73,32 +162,25 @@
     const projects = await res.json();
     const grid = document.getElementById('projectsGrid');
     if (!projects.length) {
-      grid.innerHTML = `
-        <div style="grid-column:1/-1;text-align:center;padding:80px 40px;">
-          <div style="font-size:3rem;margin-bottom:16px;">🛋️</div>
-          <h3 style="font-size:1.2rem;margin-bottom:8px;">No projects yet</h3>
-          <p style="color:var(--muted);font-weight:300;margin-bottom:24px;">Start your first project and transform your space.</p>
-          <a href="/project/new" class="btn btn-primary">Start a Project</a>
-        </div>`;
+      grid.innerHTML = `<div class="empty-state">
+        <h3>No projects yet</h3>
+        <p>Start with AI Flip Preview for instant inspiration,<br>or submit a project to work with one of our designers.</p>
+        <a href="/project/new" class="btn-outline">Start a Project</a>
+      </div>`;
       return;
     }
     grid.innerHTML = projects.map(p => `
-      <div class="project-card" onclick="window.location.href='/project/${p.id}'">
-        <div class="project-card-img">
-          ${p.preview_image ? `<img src="${p.preview_image}">` : '<div style="width:100%;height:100%;background:linear-gradient(135deg,#c8d4ac,#8a9e5f);"></div>'}
-        </div>
-        <div class="project-card-body">
+      <div class="project-tile" onclick="window.location.href='/project/${p.id}'">
+        <div class="project-img">${p.preview_image ? `<img src="${p.preview_image}">` : ''}</div>
+        <div class="project-body">
           <h3>${p.room_type}</h3>
-          <div style="margin-bottom:8px;">
-            <span class="status-badge status-${p.status}">${p.status.replace('_', ' ')}</span>
-          </div>
-          <div style="font-size:0.82rem;color:var(--muted);">
-            ${p.designer_name ? p.designer_name : 'Awaiting designer'}
-            ${p.budget ? ' · $' + p.budget : ''}
+          <div class="project-meta">
+            <span class="status-dot dot-${p.status}"></span>
+            <span class="status-text">${p.status.replace('_', ' ')}</span>
+            ${p.designer_name ? ' · ' + p.designer_name : ''}
           </div>
         </div>
-      </div>
-    `).join('');
+      </div>`).join('');
   }
 
   loadProjects();
