@@ -160,7 +160,7 @@
 </nav>
 
 <div class="hero">
-  <div class="hero-badge">✨ Free AI Tool</div>
+  <div class="hero-badge"> Free AI Tool</div>
   <h1>See Your Room <span>Transformed</span></h1>
   <p>Upload a photo and our AI will generate a luxury redesign vision — complete with a curated shopping list.</p>
 </div>
@@ -168,7 +168,7 @@
 <div class="upload-card" id="upload-section">
   <div class="upload-zone" id="drop-zone">
     <input type="file" id="photo-input" accept="image/*" />
-    <div class="upload-icon">🏠</div>
+    <div class="upload-icon"></div>
     <h3>Drop your photo here</h3>
     <p>or click to browse — JPG, PNG, WEBP up to 10MB</p>
     <img id="preview-img" alt="Room preview" />
@@ -218,7 +218,7 @@
     <a href="/designers" class="cta-btn">Browse Olive Designers →</a>
   </div>
 
-  <button class="try-again-btn" id="try-again-btn">↩ Try another room</button>
+  <button class="try-again-btn" id="try-again-btn">Try another room</button>
 </div>
 
 <script>
@@ -240,7 +240,7 @@
     previewImg.src = url;
     previewImg.style.display = 'block';
     analyzeBtn.disabled = false;
-    analyzeBtn.textContent = 'Generate My Redesign Vision ✨';
+    analyzeBtn.textContent = 'Generate My Redesign Vision ';
   });
 
   dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
@@ -254,7 +254,7 @@
     previewImg.src = URL.createObjectURL(file);
     previewImg.style.display = 'block';
     analyzeBtn.disabled = false;
-    analyzeBtn.textContent = 'Generate My Redesign Vision ✨';
+    analyzeBtn.textContent = 'Generate My Redesign Vision ';
   });
 
   analyzeBtn.addEventListener('click', async () => {
