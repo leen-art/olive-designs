@@ -36,12 +36,12 @@ router.post('/projects', requireRole('customer'), upload.fields([
     const projectId = result.lastInsertRowid;
     if (req.files['room_photos']) {
       req.files['room_photos'].forEach(file => {
-        db.prepare('INSERT INTO project_images (project_id, image_path, image_type) VALUES (?, ?, ?)').run(projectId, file.path, 'room');
+        db.prepare('INSERT INTO project_images (project_id, image_path, image_type) VALUES (?, ?, ?)').run(projectId, file.secure_url || file.path || '', 'room');
       });
     }
     if (req.files['inspiration_photos']) {
       req.files['inspiration_photos'].forEach(file => {
-        db.prepare('INSERT INTO project_images (project_id, image_path, image_type) VALUES (?, ?, ?)').run(projectId, file.path, 'inspiration');
+        db.prepare('INSERT INTO project_images (project_id, image_path, image_type) VALUES (?, ?, ?)').run(projectId, file.secure_url || file.path || '', 'inspiration');
       });
     }
     res.json({ success: true, projectId });

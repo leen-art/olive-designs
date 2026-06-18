@@ -108,7 +108,7 @@
     if (!fullName || !email || !password) { errorMsg.textContent = 'Please fill in all fields.'; errorMsg.style.display = 'block'; return; }
     const res = await fetch('/signup', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fullName, email, password, role: selectedRole })
+      body: JSON.stringify({ full_name: fullName, email, password, role: selectedRole })
     });
     const data = await res.json();
     if (data.success) {
