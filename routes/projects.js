@@ -22,33 +22,38 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } });
 
-router.post('/projects', requireRole('customer'), upload.fields([
-  { name: 'room_photos', maxCount: 20 },
-  { name: 'inspiration_photos', maxCount: 20 }
-]), (req, res) => {
-  try {
-    const { room_type, dimensions, budget, feeling, color_preferences, items_to_keep, items_wanted, style_preferences } = req.body;
-    if (!room_type) return res.status(400).json({ error: 'Room type is required.' });
-    const result = db.prepare(`
-      INSERT INTO projects (customer_id, room_type, dimensions, budget, feeling, color_preferences, items_to_keep, items_wanted, style_preferences)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(req.session.userId, room_type, dimensions, budget || null, feeling, color_preferences, items_to_keep, items_wanted, style_preferences);
-    const projectId = result.lastInsertRowid;
-    if (req.files['room_photos']) {
-      req.files['room_photos'].forEach(file => {
-        db.prepare('INSERT INTO project_images (project_id, image_path, image_type) VALUES (?, ?, ?)').run(projectId, file.secure_url || file.path || '', 'room');
-      });
+router.post('/projects', requireRole('customer'), (req, res) => {
+  upload.fields([
+    { name: 'room_photos', maxCount: 20 },
+    { name: 'inspiration_photos', maxCount: 20 }
+  ])(req, res, (uploadErr) => {
+    if (uploadErr) console.log('Upload error (non-fatal):', uploadErr.message);
+    try {
+      const { room_type, dimensions, budget, feeling, color_preferences, items_to_keep, items_wanted, style_preferences } = req.body;
+      if (!room_type) return res.status(400).json({ error: 'Room type is required.' });
+      const result = db.prepare(`
+        INSERT INTO projects (customer_id, room_type, dimensions, budget, feeling, color_preferences, items_to_keep, items_wanted, style_preferences)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).run(req.session.userId, room_type, dimensions, budget || null, feeling, color_preferences, items_to_keep, items_wanted, style_preferences);
+      const projectId = result.lastInsertRowid;
+      if (req.files && req.files['room_photos']) {
+        req.files['room_photos'].forEach(file => {
+          const url = file.secure_url || file.path || '';
+          db.prepare('INSERT INTO project_images (project_id, image_path, image_type) VALUES (?, ?, ?)').run(projectId, url, 'room');
+        });
+      }
+      if (req.files && req.files['inspiration_photos']) {
+        req.files['inspiration_photos'].forEach(file => {
+          const url = file.secure_url || file.path || '';
+          db.prepare('INSERT INTO project_images (project_id, image_path, image_type) VALUES (?, ?, ?)').run(projectId, url, 'inspiration');
+        });
+      }
+      res.json({ success: true, projectId });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Server error.' });
     }
-    if (req.files['inspiration_photos']) {
-      req.files['inspiration_photos'].forEach(file => {
-        db.prepare('INSERT INTO project_images (project_id, image_path, image_type) VALUES (?, ?, ?)').run(projectId, file.secure_url || file.path || '', 'inspiration');
-      });
-    }
-    res.json({ success: true, projectId });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error.' });
-  }
+  });
 });
 
 router.get('/projects', requireRole('customer'), (req, res) => {
@@ -143,7 +148,7 @@ router.delete('/furniture/:id', requireRole('designer'), (req, res) => {
 router.post('/projects/:id/submit', requireRole('designer'), upload.single('concept_image'), (req, res) => {
   try {
     const { concept_description } = req.body;
-    const concept_image_path = req.file ? req.file.path : null;
+    const concept_image_path = req.file ? (req.file.secure_url || req.file.path) : null;
     db.prepare(`UPDATE projects SET status = 'review', concept_description = ?, concept_image_path = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND designer_id = ?`).run(concept_description, concept_image_path, req.params.id, req.session.userId);
     const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(req.params.id);
     db.prepare('INSERT INTO notifications (user_id, type, message, project_id) VALUES (?, ?, ?, ?)').run(project.customer_id, 'review', 'Your design is ready for review!', project.id);
